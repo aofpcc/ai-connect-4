@@ -1,0 +1,9 @@
+altgraph==0.17
+cx-Freeze==6.3
+importlib-metadata==2.0.0
+macholib==1.14
+numpy==1.19.4
+pygame==2.0.0
+pyinstaller==4.0
+pyinstaller-hooks-contrib==2020.10
+zipp==3.4.0

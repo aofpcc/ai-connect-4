@@ -1,3 +1,8 @@
 bin/
 include/
 lib/
+build/
+dist/
+.vscode/
+old/
+setup.py
