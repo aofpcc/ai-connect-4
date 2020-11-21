@@ -31,8 +31,8 @@ PLAYER_TURN = 1
 turn = 1
 winner = ""
 
-ROW_COUNT = 5
-COLUMN_COUNT = 5
+ROW_COUNT = 6
+COLUMN_COUNT = 7
 WINNING_LENGTH = 4
 DEPTH = 7
 
@@ -66,6 +66,13 @@ def create_board():
   board = np.zeros((ROW_COUNT, COLUMN_COUNT))
   board.fill(Piece.Empty.value)
   return board
+
+def reset_game():
+	global board, turn, winner, playing
+	board = create_board()
+	turn = 1
+	winner = ''
+	playing = True
 
 def drop_piece(board, row, col, piece):
   board[row][col] = piece
@@ -235,14 +242,9 @@ def player_turn(board):
 		column = int(input("Please choose one of these value:"))
 	row = next_row(board, column)
 	drop_piece(board, row, column, Piece.Player.value)
-	if winning_move(board, Piece.Player.value):
-		playing = False
-		winner = 'Player Won'
+	check_winner(board)
 
 	available_columns = get_available_columns(board)
-	if len(winner) == 0 and len(available_columns) == 0:
-		playing = False
-		winner = "Draw"
 
 def check_winner(board):
 	global winner, playing
@@ -251,14 +253,14 @@ def check_winner(board):
 	available_columns = get_available_columns(board)
 
 	if winning_move(board, Piece.Player.value):
-		winner = "Play won"
+		winner = "Player won | Press Spacebar to reset game"
 		playing = False
 	elif winning_move(board, Piece.AI.value):
-		winner = "AI won"
+		winner = "AI won | Press Spacebar to reset game"
 		playing = False
 	elif len(winner) == 0 and len(available_columns) == 0:
 		playing = False
-		winner = "Draw"
+		winner = "Draw | Press Spacebar to reset games"
 
 def ai_turn(board):
 	global ai_is_playing, winner, playing
@@ -339,10 +341,16 @@ board = create_board()
 
 while running:
 	# Did the user click the window close button?
+	pressed = pygame.key.get_pressed()
+	if pressed[K_SPACE]:
+		reset_game()
+
 	for event in pygame.event.get():
 			if event.type == QUIT:
 				running = False
-			elif not playing or ai_is_playing:
+			elif not playing:
+				pass
+			elif ai_is_playing:
 				pass
 			elif event.type == MOUSEMOTION:
 				mouse_position = pygame.mouse.get_pos()
@@ -362,7 +370,7 @@ while running:
 		x.start()
 		ai_is_playing = True
 		turn += 1
-					
+
 	# Fill the background with white
 	screen.fill((255, 255, 255))
 	draw_board(board)
